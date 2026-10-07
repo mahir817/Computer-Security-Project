@@ -1,0 +1,12 @@
+# Environment
+.env
+venv/
+__pycache__/
+*.pyc
+
+# SQLite databases (generated at runtime)
+*.db
+
+# IDE
+.vscode/
+.idea/

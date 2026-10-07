@@ -1,0 +1,50 @@
+# Behavior profile for the IT support agent (support-agent-v3)
+#
+# This file defines what "normal" looks like for this agent/task.
+# The detector compares each tool call against these rules.
+#
+# Owner: Member 1
+
+agent_identity: support-agent-v3
+
+# How far apart (in time) the first and last action of a forbidden sequence
+# can be and still count as "the same chain." Without this, the detector
+# would only catch a forbidden pair if the two tools were called with
+# nothing in between — a single unrelated decoy call would defeat it.
+sequence_window_seconds: 120
+
+# Tools the agent is allowed to use
+allowed_tools:
+  - read_ticket
+  - search_kb
+  - query_db
+
+# Per-tool target restrictions
+# Empty list [] means the tool is NEVER allowed for this agent
+allowed_targets:
+  query_db:
+    - tickets        # may query the tickets table
+    - kb_index       # may query the knowledge base index
+    - users          # may look up basic user info
+    # NOTE: 'payroll' and 'credentials' are NOT listed → scope abuse if accessed
+  http_post: []      # support agent should NEVER make external HTTP calls
+
+# Forbidden action sequences (ordered chains that indicate attack patterns)
+forbidden_sequences:
+  - [query_db, http_post]       # DB read → external send = data exfiltration
+  - [read_ticket, http_post]    # ticket read → external send = data leak
+
+# Rate limits per tool (max calls within a rolling time window)
+rate_limits:
+  read_ticket:
+    max_calls: 20
+    window_seconds: 60
+  search_kb:
+    max_calls: 20
+    window_seconds: 60
+  query_db:
+    max_calls: 10
+    window_seconds: 60
+  http_post:
+    max_calls: 0          # should never be called at all
+    window_seconds: 60

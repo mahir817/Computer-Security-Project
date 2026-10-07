@@ -1,0 +1,13 @@
+# Core dependencies
+openai>=1.30.0          # OpenAI-compatible SDK (works with Groq, Gemini, etc.)
+pyyaml>=6.0             # YAML behavior profile parsing
+python-dotenv>=1.0.0    # Load API keys from .env file
+
+# Testing
+pytest>=8.0.0
+
+# Optional extensions
+streamlit>=1.35.0       # Dashboard UI
+scikit-learn>=1.5.0     # ML anomaly detection (Isolation Forest)
+pandas>=2.2.0           # Data handling for dashboard
+requests
